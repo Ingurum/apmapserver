@@ -8,7 +8,7 @@ public class TraceParser {
 	
 	public static Map<APInfo, List<Location>> parse(String traceDirectory){
 		Map<APInfo, List<Location>> apInfoMap = new HashMap<APInfo, List<Location>>();
-		
+		// add parsing here
 		return apInfoMap;
 	}
 	
