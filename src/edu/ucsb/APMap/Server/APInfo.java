@@ -1,3 +1,4 @@
+/*Class stores AP info*/
 package edu.ucsb.APMap.Server;
 
 public class APInfo {
