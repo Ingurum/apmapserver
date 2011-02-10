@@ -6,11 +6,11 @@ public class APInfo {
 	private String BSSID;
 	private String SSID;
 	private String capabilities;
-	private int frequency;
-	private int level;
+	private String frequency;
+	private String level;
 	
 	public APInfo(String bSSID, String sSID, String capabilities,
-			int frequency, int level) {
+			String frequency, String level) {
 		super();
 		BSSID = bSSID;
 		SSID = sSID;
@@ -43,19 +43,19 @@ public class APInfo {
 		this.capabilities = capabilities;
 	}
 
-	public int getFrequency() {
+	public String getFrequency() {
 		return frequency;
 	}
 
-	public void setFrequency(int frequency) {
+	public void setFrequency(String frequency) {
 		this.frequency = frequency;
 	}
 
-	public int getLevel() {
+	public String getLevel() {
 		return level;
 	}
 
-	public void setLevel(int level) {
+	public void setLevel(String level) {
 		this.level = level;
 	}
 	

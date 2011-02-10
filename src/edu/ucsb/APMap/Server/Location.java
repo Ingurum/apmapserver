@@ -2,28 +2,28 @@ package edu.ucsb.APMap.Server;
 
 public class Location {
 
-	double longtitude;
-	double latitude;
+	String longtitude;
+	String latitude;
 	
-	public Location(double longtitude, double latitude) {
+	public Location(String longtitude, String latitude) {
 		super();
 		this.longtitude = longtitude;
 		this.latitude = latitude;
 	}
 
-	public double getLongtitude() {
+	public String getLongtitude() {
 		return longtitude;
 	}
 
-	public void setLongtitude(double longtitude) {
+	public void setLongtitude(String longtitude) {
 		this.longtitude = longtitude;
 	}
 
-	public double getLatitude() {
+	public String getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(double latitude) {
+	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
 	
