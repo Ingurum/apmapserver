@@ -88,6 +88,41 @@ public class APInfo {
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
+
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((SSID == null) ? 0 : SSID.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		APInfo other = (APInfo) obj;
+		if (SSID == null) {
+			if (other.SSID != null)
+				return false;
+		} else if (!SSID.equals(other.SSID))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "APInfo [BSSID=" + BSSID + ", SSID=" + SSID + ", capabilities="
+				+ capabilities + ", frequency=" + frequency + ", level="
+				+ level + ", longtitude=" + longtitude + ", latitude="
+				+ latitude + "]";
+	}
 	
 	
 }
