@@ -26,6 +26,12 @@ public class Location {
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
+
+	@Override
+	public String toString() {
+		return "Location [longtitude=" + longtitude + ", latitude=" + latitude
+				+ "]";
+	}
 	
 	
 	
