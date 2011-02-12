@@ -8,6 +8,8 @@ public class APInfo {
 	private String capabilities;
 	private String frequency;
 	private String level;
+	private String longtitude;
+	private String latitude;
 	
 	public APInfo(String bSSID, String sSID, String capabilities,
 			String frequency, String level) {
@@ -17,6 +19,18 @@ public class APInfo {
 		this.capabilities = capabilities;
 		this.frequency = frequency;
 		this.level = level;
+	}
+	
+	public APInfo(String bSSID, String sSID, String capabilities,
+			String frequency, String level, String longtitude, String latitude) {
+		super();
+		BSSID = bSSID;
+		SSID = sSID;
+		this.capabilities = capabilities;
+		this.frequency = frequency;
+		this.level = level;
+		this.longtitude = longtitude;
+		this.latitude = latitude;
 	}
 
 	public String getBSSID() {
@@ -57,6 +71,22 @@ public class APInfo {
 
 	public void setLevel(String level) {
 		this.level = level;
+	}
+
+	public String getLongtitude() {
+		return longtitude;
+	}
+
+	public void setLongtitude(String longtitude) {
+		this.longtitude = longtitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
 	}
 	
 	
