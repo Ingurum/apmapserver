@@ -21,18 +21,17 @@ public class APInfo {
 		this.level = level;
 	}
 	
-	
 	public APInfo(String bSSID, String sSID, String capabilities,
-			Location location) {
+			String frequency, String longtitude, String latitude) {
 		super();
 		BSSID = bSSID;
 		SSID = sSID;
 		this.capabilities = capabilities;
-		this.longtitude = location.getLongtitude();;
-		this.latitude = location.getLatitude();
+		this.frequency = frequency;
+		this.longtitude = longtitude;
+		this.latitude = latitude;
 	}
-
-
+	
 	public APInfo(String bSSID, String sSID, String capabilities,
 			String frequency, String level, String longtitude, String latitude) {
 		super();
