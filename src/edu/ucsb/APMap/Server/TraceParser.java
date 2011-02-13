@@ -22,7 +22,7 @@ public class TraceParser {
 			String line;
 			String[] elems;
 			Location loc = null;
-			APInfo ap;
+			APInfo ap ;
 			
 			while((line = br.readLine()) != null) {
 				if (line.equals("Beginning_LOC")) {
