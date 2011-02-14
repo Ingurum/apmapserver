@@ -1,8 +1,9 @@
 package edu.ucsb.APMap.Server;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import edu.ucsb.APMap.util.APInfo;
 
 public class APLocCaculator {
 	

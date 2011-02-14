@@ -1,5 +1,5 @@
 /*Class stores AP info*/
-package edu.ucsb.APMap.Server;
+package edu.ucsb.APMap.util;
 
 public class APInfo {
 	
