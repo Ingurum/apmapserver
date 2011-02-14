@@ -1,23 +1,33 @@
 package edu.ucsb.APMap.Server;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+import edu.ucsb.APMap.util.DBOp;
 
 class UDPReceiver
 {
-	public static final String SERVERIP = "127.0.0.1";
-	public static final int SERVERPORT = 0;
+	public static final String IP = "127.0.0.1";
+	public static final int PORT = 1222;
 	
 	public static void main(String args[]) throws Exception
 	  {
-			InetAddress serverAddr = InetAddress.getByName(SERVERIP);
-			DatagramSocket serverSocket = new DatagramSocket(SERVERPORT, serverAddr);
+			InetAddress serverAddr = InetAddress.getByName(IP);
+			DatagramSocket serverSocket = new DatagramSocket(PORT, serverAddr);
 	        byte[] receiveData = new byte[1024];
 	        while(true)
 	           {
-	              DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+	              System.out.println("server receiver running...");
+	        	  DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 	              serverSocket.receive(receivePacket);
 	              String content = new String( receivePacket.getData());
+	              System.out.println("receive " + content);
 	              if(content.startsWith("REQ")){
-				  // TODO send back the AP info
+	            	  DBOp dbop = new DBOp("localhost", "3306", "androidwifi", "android", "cs284winter");
+	            	  String apInfo = dbop.getAPInfos();
+	            	  String apContent = "a:" + apInfo;
+	            	  UDPSender u = new UDPSender(apContent);
+	            	  u.run();
 				  }
 				  else if(content.startsWith("TRC")){
 				  // TODO store the trace
