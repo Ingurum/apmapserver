@@ -6,13 +6,13 @@ public class APInfo {
 	private String BSSID;
 	private String SSID;
 	private String capabilities;
-	private String frequency;
-	private String level;
-	private String longtitude;
-	private String latitude;
+	private double frequency;
+	private int level;
+	private double longtitude;
+	private double latitude;
 	
 	public APInfo(String bSSID, String sSID, String capabilities,
-			String frequency, String level) {
+			double frequency, int level) {
 		super();
 		BSSID = bSSID;
 		SSID = sSID;
@@ -22,7 +22,7 @@ public class APInfo {
 	}
 	
 	public APInfo(String bSSID, String sSID, String capabilities,
-			String frequency, String longtitude, String latitude) {
+			double frequency, double longtitude, double latitude) {
 		super();
 		BSSID = bSSID;
 		SSID = sSID;
@@ -33,7 +33,7 @@ public class APInfo {
 	}
 	
 	public APInfo(String bSSID, String sSID, String capabilities,
-			String frequency, String level, String longtitude, String latitude) {
+			double frequency, int level, double longtitude, double latitude) {
 		super();
 		BSSID = bSSID;
 		SSID = sSID;
@@ -68,35 +68,35 @@ public class APInfo {
 		this.capabilities = capabilities;
 	}
 
-	public String getFrequency() {
+	public double getFrequency() {
 		return frequency;
 	}
 
-	public void setFrequency(String frequency) {
+	public void setFrequency(double frequency) {
 		this.frequency = frequency;
 	}
 
-	public String getLevel() {
+	public int getLevel() {
 		return level;
 	}
 
-	public void setLevel(String level) {
+	public void setLevel(int level) {
 		this.level = level;
 	}
 
-	public String getLongtitude() {
+	public double getLongtitude() {
 		return longtitude;
 	}
 
-	public void setLongtitude(String longtitude) {
+	public void setLongtitude(double longtitude) {
 		this.longtitude = longtitude;
 	}
 
-	public String getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(String latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
