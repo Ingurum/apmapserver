@@ -20,6 +20,7 @@ public class DBOp {
 		}
 		try{
 			this.mysqlCon = DriverManager.getConnection(databaseURL, dbUser, dbPassword);
+			
 			System.out.println("Database connected");
 		}
 		catch(SQLException e){
@@ -29,7 +30,7 @@ public class DBOp {
 		}
 	}
 	
-	public boolean insertAPInfo(String bssid, String ssid, String capabilities, String frequency, String longtitude, String latitude){
+	public boolean insertAPInfo(String bssid, String ssid, String capabilities, double frequency, double longtitude, double latitude){
 		try {
 			Statement stmt = mysqlCon.createStatement();
 			String sqlStmt = "insert into aplocation values(\"" + bssid + "\", " +

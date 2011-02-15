@@ -17,7 +17,7 @@ public class TraceParser {
 		try {
 			BufferedReader br;
 			
-				br = new BufferedReader(new FileReader(traceDirectory));
+			br = new BufferedReader(new FileReader(traceDirectory));
 			
 			
 			String line;
@@ -30,7 +30,7 @@ public class TraceParser {
 					while (!(line = br.readLine()).equals("Ending_LOC")){
 						elems = line.split(",");
 						if (elems.length == 3){
-							loc = new Location(elems[1], elems[0]);	
+							loc = new Location(Double.parseDouble(elems[1]), Double.parseDouble(elems[0]));	
 						}	
 					}
 				}
@@ -39,8 +39,8 @@ public class TraceParser {
 					while (!(line = br.readLine()).equals("Ending_APs")){
 						elems = line.split(",");
 						if(elems.length == 5){
-							System.out.println(line);
-							ap = new APInfo(elems[0], elems[3], elems[4], elems[2], elems[1]);
+							//System.out.println(line);
+							ap = new APInfo(elems[0], elems[3], elems[4], Double.parseDouble(elems[2]), Integer.parseInt(elems[1]));
 							if(apInfoMap.containsKey(ap)){
 								apInfoMap.get(ap).add(loc);
 							}
@@ -58,9 +58,9 @@ public class TraceParser {
 			e.printStackTrace();
 		} finally{
 			for(Map.Entry<APInfo, Set<Location>> entry: apInfoMap.entrySet()){
-				System.out.println(entry.getKey().toString());
+				//System.out.println(entry.getKey().toString());
 				for(Location loc: entry.getValue()){
-					System.out.println(loc.toString());
+					//System.out.println(loc.toString());
 				}
 			}
 			return apInfoMap;
@@ -72,6 +72,7 @@ public class TraceParser {
 	public static void main(String args[]) throws Exception
     {
 		TraceParser.parse("/home/mariya/ap-02-10-10.txt");
+		System.out.println("Done");
     }
 	
 }
