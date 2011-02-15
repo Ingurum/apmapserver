@@ -10,7 +10,7 @@ import edu.ucsb.APMap.util.DBOp;
 
 public class APLocCaculator {
 	public static void main(String[] agrs){
-		Map<APInfo, Set<Location>> scanLoc;
+		Map<APInfo, Set<Location>> scanLoc = null; //Is this correct?
 		String traceDirectory = "/home/mariya/Dropbox/Winter2011/CS284/project/data/";
 		File dir = new File(traceDirectory);
 		String[] files = dir.list();
@@ -19,22 +19,26 @@ public class APLocCaculator {
 		}
 		else {
 			for (int i=0; i<files.length; i++){
+				System.out.println(files[i]);
+			}
+			for (int i=0; i<files.length; i++){
+				//What's the max size of a Map? Seems scanLoc can't fit everything I have.
 				scanLoc = new TraceParser().parse(traceDirectory + "/" + files[i]);
-				APInfo apInfo;
-				for(Map.Entry<APInfo, Set<Location>> entry: scanLoc.entrySet()){
-					apInfo = entry.getKey();
-					
-					Location loc = calWifiLoc(entry.getKey(), entry.getValue());
-					
-					dbInsertApInfo(apInfo.getBSSID(), 
-							apInfo.getSSID(), 
-							apInfo.getCapabilities(), 
-							apInfo.getFrequency(), 
-							loc.longtitude, 
-							loc.latitude);
-				}
 			}
 			 
+		}
+		APInfo apInfo;
+		for(Map.Entry<APInfo, Set<Location>> entry: scanLoc.entrySet()){
+			apInfo = entry.getKey();
+			
+			Location loc = calWifiLoc(entry.getKey(), entry.getValue());
+			
+			dbInsertApInfo(apInfo.getBSSID(), 
+					apInfo.getSSID(), 
+					apInfo.getCapabilities(), 
+					apInfo.getFrequency(), 
+					loc.longtitude, 
+					loc.latitude);
 		}
 	}
 	
