@@ -1,6 +1,7 @@
 package edu.ucsb.APMap.Server;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,7 +59,7 @@ public class TraceParser {
 			e.printStackTrace();
 		} finally{
 			for(Map.Entry<APInfo, Set<Location>> entry: apInfoMap.entrySet()){
-				//System.out.println(entry.getKey().toString());
+				System.out.println(entry.getKey().toString());
 				for(Location loc: entry.getValue()){
 					//System.out.println(loc.toString());
 				}
@@ -69,11 +70,28 @@ public class TraceParser {
 	
 	
 	//Local main for test purposes
+	
+	/*
 	public static void main(String args[]) throws Exception
     {
-		TraceParser.parse("/home/mariya/ap-02-10-10.txt");
+		Map<APInfo, Set<Location>> scanLoc = null;
+		String traceDirectory = "/home/mariya/Dropbox/Winter2011/CS284/project/data/";
+		File dir = new File(traceDirectory);
+		String[] files = dir.list();
+		if(files == null){
+			System.out.println("Failed to open directory.");
+		}
+		else {
+			for (int i=0; i<files.length; i++){
+				System.out.println("################" + files[i] + "##############\n");
+				scanLoc = new TraceParser().parse(traceDirectory + "/" + files[i]);
+				//System.out.println(scanLoc);
+			}
+		}
+		//TraceParser.parse("/home/mariya/ap-02-10-10.txt");
+		//TraceParser.parse("/home/mariya/Dropbox/Winter2011/CS284/project/data/ap-02-14-01.txt");
 		System.out.println("Done");
-    }
+    }*/
 	
 }
 
