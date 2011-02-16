@@ -27,6 +27,7 @@ class UDPReceiver
 	            	  DBOp dbop = new DBOp("localhost", "3306", "androidwifi", "android", "cs284winter");
 	            	  String apInfo = dbop.getAPInfos();
 	            	  String apContent = "a:" + apInfo;
+	            	  System.out.println("client IP: " + clientIp.getHostAddress());
 	            	  UDPSender u = new UDPSender(clientIp, apContent);
 	            	  u.run();
 				  }
