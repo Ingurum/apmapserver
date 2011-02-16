@@ -7,14 +7,16 @@ import java.net.InetAddress;
 public class UDPSender implements Runnable{
 	byte[] buf;
 	static int CLIENTPORT = 1234;
-	static byte [] CLIENTADDR = new byte[] {(byte)127,(byte)0,(byte)0,(byte)1};
+	InetAddress clientIp;
 	
-	public UDPSender(byte[] buf){
+	public UDPSender(InetAddress clientIp, byte[] buf){
 		this.buf = buf;
+		this.clientIp = clientIp;
 	}
 	
-	public UDPSender(String str){
+	public UDPSender(InetAddress clientIp, String str){
 		this.buf = str.getBytes();
+		this.clientIp = clientIp;
 	}
 	
 	@Override
@@ -22,7 +24,7 @@ public class UDPSender implements Runnable{
 		try {
 			// Retrieve the ServerIP
 			DatagramSocket socket = new DatagramSocket();
-			DatagramPacket packet = new DatagramPacket(buf, buf.length,	InetAddress.getByAddress(CLIENTADDR), CLIENTPORT);
+			DatagramPacket packet = new DatagramPacket(buf, buf.length,	clientIp, CLIENTPORT);
 			
 			/* Send out the packet */
 			socket.send(packet);
