@@ -12,9 +12,9 @@ import edu.ucsb.APMap.util.APInfo;
 
 public class TraceParser {
 	
-	public static Map<APInfo, Set<Location>> parse(String traceDirectory)
+	public static Map<APInfo, Set<LocationLevel>> parse(String traceDirectory)
 	{
-		Map<APInfo, Set<Location>> apInfoMap = new HashMap<APInfo, Set<Location>>();
+		Map<APInfo, Set<LocationLevel>> apInfoMap = new HashMap<APInfo, Set<LocationLevel>>();
 		try {
 			BufferedReader br;
 			
@@ -24,6 +24,7 @@ public class TraceParser {
 			String line;
 			String[] elems;
 			Location loc = null;
+			LocationLevel loclev = null;
 			APInfo ap ;
 			
 			while((line = br.readLine()) != null) {
@@ -42,13 +43,14 @@ public class TraceParser {
 						if(elems.length == 5){
 							//System.out.println(line);
 							ap = new APInfo(elems[0], elems[3], elems[4], Double.parseDouble(elems[2]), Integer.parseInt(elems[1]));
+							loclev = new LocationLevel(loc.getLongtitude(), loc.getLatitude(), ap.getLevel());
 							if(apInfoMap.containsKey(ap)){
-								apInfoMap.get(ap).add(loc);
+								apInfoMap.get(ap).add(loclev);
 							}
 							else{
-								Set<Location> locations = new HashSet<Location>();
-								locations.add(loc);
-								apInfoMap.put(ap, locations);
+								Set<LocationLevel> locationlevs = new HashSet<LocationLevel>();
+								locationlevs.add(loclev);
+								apInfoMap.put(ap, locationlevs);
 							}	
 						}		
 					}
@@ -58,10 +60,10 @@ public class TraceParser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally{
-			for(Map.Entry<APInfo, Set<Location>> entry: apInfoMap.entrySet()){
+			for(Map.Entry<APInfo, Set<LocationLevel>> entry: apInfoMap.entrySet()){
 				System.out.println(entry.getKey().toString());
-				for(Location loc: entry.getValue()){
-					//System.out.println(loc.toString());
+				for(LocationLevel loc: entry.getValue()){
+					System.out.println(loc.toString());
 				}
 			}
 			return apInfoMap;
@@ -74,7 +76,7 @@ public class TraceParser {
 	/*
 	public static void main(String args[]) throws Exception
     {
-		Map<APInfo, Set<Location>> scanLoc = null;
+		Map<APInfo, Set<LocationLevel>> scanLoc = null;
 		String traceDirectory = "/home/mariya/Dropbox/Winter2011/CS284/project/data/";
 		File dir = new File(traceDirectory);
 		String[] files = dir.list();

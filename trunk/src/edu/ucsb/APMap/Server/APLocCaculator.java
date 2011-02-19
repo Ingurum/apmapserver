@@ -10,7 +10,7 @@ import edu.ucsb.APMap.util.DBOp;
 
 public class APLocCaculator {
 	public static void main(String[] agrs){
-		Map<APInfo, Set<Location>> scanLoc = null; //Is this correct?
+		Map<APInfo, Set<LocationLevel>> scanLoc = null; //Is this correct?
 		String traceDirectory = "/home/mariya/Dropbox/Winter2011/CS284/project/data/";
 		File dir = new File(traceDirectory);
 		String[] files = dir.list();
@@ -28,22 +28,22 @@ public class APLocCaculator {
 			 
 		}
 		APInfo apInfo;
-		for(Map.Entry<APInfo, Set<Location>> entry: scanLoc.entrySet()){
+		for(Map.Entry<APInfo, Set<LocationLevel>> entry: scanLoc.entrySet()){
 			apInfo = entry.getKey();
 			
 			Location loc = calWifiLoc(entry.getKey(), entry.getValue());
-			
+			/*
 			dbInsertApInfo(apInfo.getBSSID(), 
 					apInfo.getSSID(), 
 					apInfo.getCapabilities(), 
 					apInfo.getFrequency(), 
 					loc.longtitude, 
-					loc.latitude);
+					loc.latitude);*/
 		}
 	}
 	
 	// TODO compute location for each AP
-	private static Location calWifiLoc(APInfo apInfo, Set<Location> scanedLocs){
+	private static Location calWifiLoc(APInfo apInfo, Set<LocationLevel> scanedLocs){
 		System.out.println(apInfo.getBSSID() + " " + apInfo.getSSID());
 		int reports = scanedLocs.size();
 		Iterator it = scanedLocs.iterator();
