@@ -61,9 +61,9 @@ public class TraceParser {
 			e.printStackTrace();
 		} finally{
 			for(Map.Entry<APInfo, Set<LocationLevel>> entry: apInfoMap.entrySet()){
-				System.out.println(entry.getKey().toString());
+				//System.out.println(entry.getKey().toString());
 				for(LocationLevel loc: entry.getValue()){
-					System.out.println(loc.toString());
+					//System.out.println(loc.toString());
 				}
 			}
 			return apInfoMap;
@@ -73,7 +73,7 @@ public class TraceParser {
 	
 	//Local main for test purposes
 	
-	/*
+	
 	public static void main(String args[]) throws Exception
     {
 		Map<APInfo, Set<LocationLevel>> scanLoc = null;
@@ -93,7 +93,7 @@ public class TraceParser {
 		//TraceParser.parse("/home/mariya/ap-02-10-10.txt");
 		//TraceParser.parse("/home/mariya/Dropbox/Winter2011/CS284/project/data/ap-02-14-01.txt");
 		System.out.println("Done");
-    }*/
+    }
 	
 }
 
