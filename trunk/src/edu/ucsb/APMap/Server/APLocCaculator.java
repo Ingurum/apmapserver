@@ -32,13 +32,13 @@ public class APLocCaculator {
 			apInfo = entry.getKey();
 			
 			Location loc = calWifiLoc(entry.getKey(), entry.getValue());
-			/*
+			
 			dbInsertApInfo(apInfo.getBSSID(), 
 					apInfo.getSSID(), 
 					apInfo.getCapabilities(), 
 					apInfo.getFrequency(), 
 					loc.longtitude, 
-					loc.latitude);*/
+					loc.latitude);
 		}
 	}
 	
@@ -47,11 +47,11 @@ public class APLocCaculator {
 		System.out.println(apInfo.getBSSID() + " " + apInfo.getSSID());
 		int reports = scanedLocs.size();
 		Iterator it = scanedLocs.iterator();
-		Location loc;
+		LocationLevel loc;
 		double sum_lat = 0, sum_long = 0;
 		while (it.hasNext()){
 			//System.out.println(it.next());
-			loc = (Location) it.next();
+			loc = (LocationLevel) it.next();
 			//System.out.println(loc.latitude);
 			sum_lat += loc.latitude;
 			//System.out.println(loc.longtitude);
