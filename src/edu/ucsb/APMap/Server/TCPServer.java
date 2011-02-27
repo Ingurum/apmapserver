@@ -1,9 +1,11 @@
 package edu.ucsb.APMap.Server;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 import edu.ucsb.APMap.util.DBOp;
 
@@ -25,7 +27,7 @@ public class TCPServer implements Runnable{
 			try {
 				System.out.println("TCP listen on port " + serverPort);
 				Socket socket = serverSocket.accept();
-				new Thread(new ConnectionHandler(socket)).start();
+				new Thread(new TcpHandler(socket)).start();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -33,10 +35,10 @@ public class TCPServer implements Runnable{
 		}
 	}
 	
-	public class ConnectionHandler implements Runnable {
+	public class TcpHandler implements Runnable {
 		private Socket socket;
 		
-		private ConnectionHandler(Socket socket) {
+		private TcpHandler(Socket socket) {
 			this.socket = socket;
 		}
 		public void run () {
@@ -50,14 +52,36 @@ public class TCPServer implements Runnable{
 				int i = 0;
 				
 				while((i = inputStream.read(buf)) != -1){
-					String recStr = new String(buf, 0, i);
-	                System.out.println(recStr);
-	                
-					if(recStr.startsWith("REQ")){
+					
+					if(buf[0]=='R' && buf[1]=='E' && buf[2]=='Q'){
 						DBOp dbop = new DBOp("localhost", "3306", "androidwifi", "android", "cs284winter");
 						String apInfo = dbop.getAPInfos();
 						String apContent = "a:" + apInfo;
 						outputStream.write(apContent.getBytes());
+					}
+					if(buf[0]=='T' && buf[1]=='R' && buf[2]=='A' && buf[3]==':' && i>9){
+						String fileName = "ap-" + (new Date()).toString();
+						FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+						int fileSize = buf[4];
+						fileSize = fileSize << 8 + buf[5];
+						fileSize = fileSize << 8 + buf[6];
+						fileSize = fileSize << 8 + buf[7];
+						System.out.println("fileSize: " + fileSize);
+						fileOutputStream.write(buf, 9, i-9);
+						int byteLeft = fileSize - i+9;
+						while(byteLeft>0){
+							if ((i = inputStream.read(buf)) != -1) {
+								if (i > byteLeft)
+									i = byteLeft;
+								fileOutputStream.write(buf, 0, i);
+							} else {
+								break;
+							}
+							
+							byteLeft -= i;
+						}
+						System.out.println("file receive Done!");
+						fileOutputStream.close();
 					}
 	            }
 			} catch (IOException e) {
