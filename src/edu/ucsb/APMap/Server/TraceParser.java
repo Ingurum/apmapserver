@@ -20,7 +20,6 @@ public class TraceParser {
 			
 			br = new BufferedReader(new FileReader(traceDirectory));
 			
-			
 			String line;
 			String[] elems;
 			Location loc = null;
