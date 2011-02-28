@@ -36,8 +36,8 @@ public class LambdaCalc {
 					dist = LambdaCalc.distance(apLT, apLG, mobLT, mobLG);
 					System.out.println("Mobile's dist: " + dist);
 					System.out.println("log of dist" + Math.log10(dist) + "Level" + mobLevel);
-					System.out.println("A lambda: " + (Math.log10(dist))/mobLevel);
-					sumLambds += (Math.log10(dist))/mobLevel;
+					System.out.println("A lambda: " + mobLevel/(Math.log10(dist)));
+					sumLambds += mobLevel/(Math.log10(dist));
 					System.out.println("Mobile's sum lambdas is: " + sumLambds);
 				}
 				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -70,9 +70,9 @@ public class LambdaCalc {
 	}
 	
 	public static void main(String args[]) throws Exception{
-		double apLT = 34.42103125;
-		double apLG = -119.86166193333334;
-		String traceDirectory = "/home/mariya/Dropbox/Winter2011/CS284/project/DATA_do_not_change/ap-02-13-01.txt";
+		double apLT = 34.4223179;
+		double apLG = -119.86251341666667;
+		String traceDirectory = "/home/mariya/Dropbox/Winter2011/CS284/project/lambda_data/GizmoDo.txt";
 		Map<APInfo, Set<LocationLevel>> scanLoc = new TraceParser().parse(traceDirectory);
 		double lambda = LambdaCalc.calcLambda(apLT, apLG, scanLoc);
 		System.out.println("GizmoDo Lambda is:" + lambda);
