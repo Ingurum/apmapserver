@@ -92,7 +92,7 @@ public class DBOp {
 			String sqlStmt = "select * from aplocation where latitude >= " + (latitudeDouble - latitudeDiff)
 							 + " and latitude <= " + (latitudeDouble + latitudeDiff)
 							 + " and longtitude >= " + (longitudeDouble - longitudeDiff)
-							 + " and longtitude <= " + (longitudeDouble + longitudeDiff);
+							 + " and longtitude <= " + (longitudeDouble + longitudeDiff + " limit 10");
 			System.out.println("sqlStmt = " + sqlStmt);
 			System.out.println("longitudeDouble = " + longitudeDouble + ", longitudeDiff = " + longitudeDiff);
 			ResultSet rs = stmt.executeQuery(sqlStmt);
