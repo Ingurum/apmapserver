@@ -66,11 +66,13 @@ public class TCPServer implements Runnable{
 						
 						
 						System.out.println("bufString = " + bufString + ", items.length = " + items.length);
-						System.out.println("latitude = " + latitude + ", longitude = ");
+						System.out.println("latitude = " + latitude + ", longitude = " + longitude);
 						
 						DBOp dbop = new DBOp("localhost", "3306", "androidwifi", "android", "cs284winter");
 						String apInfo = dbop.getAPInfos(latitude, longitude, 1.0);
 						String apContent = "a:" + apInfo;
+						System.out.println("### sending size: " + apContent.length());
+						System.out.println("sending: " + apContent);
 						outputStream.write(apContent.getBytes());
 					}
 					if(buf[0]=='T' && buf[1]=='R' && buf[2]=='A' && buf[3]==':' && i>9){

@@ -1,6 +1,7 @@
 package edu.ucsb.APMap.Server;
 
 import java.io.File;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -35,7 +36,7 @@ public class APLocCaculator {
 		for(Map.Entry<APInfo, Set<LocationLevel>> entry: scanLoc.entrySet()){
 			apInfo = entry.getKey();
 			
-			Location loc = calWifiLoc(entry.getKey(), entry.getValue());
+			LocationLevel loc = calWifiLoc(entry.getKey(), entry.getValue());
 			System.out.println("Estimated AP location: " + loc);
 			
 			/*
@@ -50,61 +51,126 @@ public class APLocCaculator {
 	}
 	
 	// TODO compute location for each AP
-	private static Location calWifiLoc(APInfo apInfo, Set<LocationLevel> scanedLocs){
+	public static LocationLevel calWifiLoc(APInfo apInfo, Set<LocationLevel> scanedLocs){
 		System.out.println("##############" + apInfo.getBSSID() + "#################");
 		if(scanedLocs.size() < 3){
+			System.out.println("Using Average.");
 			return Average(apInfo, scanedLocs);	
 		}
 		else{
-			List<LocationLevel> locations = pickRandom(scanedLocs);
-			int losSize = scanedLocs.size();
-			double samples = losSize*0.2;
-			long sampl = Math.round(samples);
-			int i = 0;
-			Location loc;
-			Set<LocationLevel> apLocs = new HashSet<LocationLevel>();
-			System.out.println("Size of locations set: " + scanedLocs.size() + " Samples: " + sampl);
-			for (i=0; i<sampl;i++){
-				System.out.println("Mobile Location1: " + locations.get(0));
-				System.out.println("Mobile Location2: " + locations.get(1));
-				System.out.println("Mobile Location3: " + locations.get(2));
-				
-				loc = Trilateration.MyTrilateration(
-						locations.get(0).getLatitude(), locations.get(0).getLongtitude(), locations.get(0).getLevel(), 
-						locations.get(1).getLatitude(), locations.get(1).getLongtitude(), locations.get(1).getLevel(), 
-						locations.get(2).getLatitude(), locations.get(2).getLongtitude(), locations.get(2).getLevel());
-				LocationLevel locs = new LocationLevel(loc.getLongtitude(), loc.getLatitude(), 0);
-				apLocs.add(locs);
-			}
-			return Average(apInfo, apLocs);
+			System.out.println("Using Trilateration.");
+			return Trilateration(apInfo, scanedLocs);
 		}
 	}
-	
-	/*until size of set is 3 pick random items*/
-	/*
-	private static Set<LocationLevel > pickRandom(Set<LocationLevel> scanedLocs){
-		System.out.println("Starting pickRandom");
-		int size = scanedLocs.size();
-		System.out.println("scanedLocs size is: " + size);
-		Set<LocationLevel> loc = new HashSet<LocationLevel>();
-		System.out.println("Set locations initialized. Size is " + loc.size());
-		int locSize = loc.size();
-		while (locSize < 3){
-			System.out.println("While loc.size == 3");
-			int i = 0;
-			int item = new Random().nextInt(size); // In real life, the Random object should be rather more shared than this
-			for(LocationLevel obj : scanedLocs)
-			{
-			    if (i == item)
-			         loc.add(obj);
-			    i = i + 1;
-			    System.out.println("Object: " + obj);
-			    System.out.println("Set: " + loc);
-			}	
-			locSize = loc.size();
+		
+	public static LocationLevel Trilateration(APInfo apInfo, Set<LocationLevel> scanedLocs) {
+		int samples = 3;
+		ArrayList<LocationLevel> locs = new ArrayList<LocationLevel>();
+		Set<LocationLevel> res = new HashSet<LocationLevel>();
+		locs.addAll(scanedLocs);
+		for (int i=0; i < samples; i++ ) {
+			Collections.shuffle(locs);
+			res.add(Trilateration.MyTrilateration(
+					  locs.get(0).getLatitude(), locs.get(0).getLongtitude(), locs.get(0).getLevel(), 
+					  locs.get(1).getLatitude(), locs.get(1).getLongtitude(), locs.get(1).getLevel(), 
+					  locs.get(2).getLatitude(), locs.get(2).getLongtitude(), locs.get(2).getLevel())
+					);
 		}
-		return loc;
-	}*/
+		if (res.size() > 1) 
+			return Average(apInfo,res);
+		else
+			return res.iterator().next();
+		
+	}
+	
+	public static LocationLevel SmartTrilateration(APInfo apInfo, Set<LocationLevel> scanedLocs){
+		ArrayList<LocationLevel> locs;
+		locs = pickThreeFurthest(scanedLocs);
+		return Trilateration.MyTrilateration(
+				  locs.get(0).getLatitude(), locs.get(0).getLongtitude(), locs.get(0).getLevel(), 
+				  locs.get(1).getLatitude(), locs.get(1).getLongtitude(), locs.get(1).getLevel(), 
+				  locs.get(2).getLatitude(), locs.get(2).getLongtitude(), locs.get(2).getLevel());
+	}
+		
+	private static ArrayList<LocationLevel> pickThreeFurthest(Set<LocationLevel> scanedLocs){
+		Iterator it = scanedLocs.iterator();
+		LocationLevel loc;
+		double minLat = 0, maxLat = 0, minLon = 0, maxLon = 0, 
+			dLat1 = 0, dLon1 = 0, dLat2 = 0, dLon2 = 0, 
+			dist1 = 0, dist2 = 0, sum_dist = 0, max_dist = 0;
+		int counter = 0;
+		LocationLevel minLatPt = new LocationLevel(0, 0, 0);
+		LocationLevel minLonPt = new LocationLevel(0, 0, 0);
+		LocationLevel maxLatPt = new LocationLevel(0, 0, 0);
+		LocationLevel maxLonPt = new LocationLevel(0, 0, 0);
+		LocationLevel furthestPoint = new LocationLevel(0, 0, 0);
+		ArrayList<LocationLevel> result = new ArrayList<LocationLevel>();
+		while (it.hasNext()){
+			loc = (LocationLevel) it.next();
+			if (counter == 0){
+				minLat = loc.getLatitude();
+				minLon = loc.getLongtitude();
+				maxLat = loc.getLatitude();
+				maxLon = loc.getLongtitude();
+			}
+			
+			if (loc.getLatitude() < minLat){
+				minLat = loc.getLatitude();
+				minLatPt = loc;
+			}
+			if (loc.getLatitude() > maxLat){
+				maxLat = loc.getLatitude();
+				maxLatPt = loc;
+			}
+			if (loc.getLongtitude() < minLon){
+				minLon = loc.getLongtitude();
+				minLonPt = loc;
+			}
+			if (loc.getLongtitude() > maxLon){
+				maxLon = loc.getLongtitude();
+				maxLonPt = loc;
+			}
+			counter++;
+		}
+		if(minLatPt.getLatitude() != 0 && minLatPt.getLongtitude() != 0 && !result.contains(minLatPt))
+			result.add(minLatPt);
+		if(minLonPt.getLatitude() != 0 && minLonPt.getLongtitude() != 0 && !result.contains(minLonPt))
+			result.add(minLonPt);
+		if(maxLatPt.getLatitude() != 0 && maxLatPt.getLongtitude() != 0 && !result.contains(maxLatPt))
+			result.add(maxLatPt);
+		if(maxLonPt.getLatitude() != 0 && maxLonPt.getLongtitude() != 0 && !result.contains(maxLonPt))
+			result.add(maxLonPt);
+		
+		if (result.size() == 3)
+			System.out.println("Case three points");
+		
+		if (result.size() == 4){
+			System.out.println("Case four points.");
+			System.out.println(result);
+			result.remove(3);
+		}
+		
+		if (result.size() == 2){
+			System.out.println("Case two points");
+			for (LocationLevel location: scanedLocs){
+				dLat1 = result.get(0).getLatitude() - location.getLatitude();
+				dLon1 = result.get(0).getLongtitude() - location.getLongtitude();
+				dLat2 = result.get(1).getLatitude() - location.getLatitude();
+				dLon2 = result.get(1).getLongtitude() - location.getLongtitude();
+				dist1 = Math.sqrt(Math.pow(dLat1, 2) + Math.pow(dLon1, 2));
+				dist2 = Math.sqrt(Math.pow(dLat2, 2) + Math.pow(dLon2, 2));
+				sum_dist = dist1 + dist2;
+				if(max_dist < sum_dist){
+					max_dist = sum_dist;
+					furthestPoint = location;
+				}
+			}
+			System.out.println("Furhtest: " + furthestPoint);
+			result.add(furthestPoint);
+		}
+		return result;
+	}
+	
 	
 	private static List<LocationLevel > pickRandom(Set<LocationLevel> scanedLocs){
 		
@@ -120,8 +186,8 @@ public class APLocCaculator {
 		return locations;
 	}
 	
-	private static Location Average(APInfo apInfo, Set<LocationLevel> scanedLocs) {
-		System.out.println(apInfo.getBSSID() + " " + apInfo.getSSID());
+	public static LocationLevel Average(APInfo apInfo, Set<LocationLevel> scanedLocs) {
+		//System.out.println(apInfo.getBSSID() + " " + apInfo.getSSID());
 		int reports = scanedLocs.size();
 		Iterator it = scanedLocs.iterator();
 		LocationLevel loc;
@@ -134,12 +200,10 @@ public class APLocCaculator {
 			//System.out.println(loc.longtitude);
 			sum_long += loc.longtitude;
 		}
-		System.out.println(sum_lat/reports);
-		System.out.println(sum_long/reports);
-		return new Location(sum_long/reports,sum_lat/reports);
+		return new LocationLevel(sum_long/reports, sum_lat/reports,0);
 
 	}
-	
+
 	//TODO write a method to import data to database. What is the table format in the DB.
 	private static boolean dbInsertApInfo (String bssid, String ssid, String capabilities, 
 			double frequency, double longtitude, double latitude) {

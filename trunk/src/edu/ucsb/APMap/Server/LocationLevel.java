@@ -39,8 +39,8 @@ public class LocationLevel {
 	
 	@Override
 	public String toString() {
-		return "Location [longtitude=" + longtitude + 
-			", latitude=" + latitude + ", level=" + level + "]";
+		return "Location [latitude=" + latitude + 
+			", longitude=" + longtitude + ", level=" + level + "]";
 	}
 	
 }

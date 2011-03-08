@@ -17,12 +17,28 @@ public class Trilateration {
         // 0 degree
         //double distance = 3324.4981666 + 234.0366524 * rssi + 6.0593624* Math.pow(rssi,2)
     //  + 0.0683264*Math.pow(rssi, 3) + 0.0002843 * Math.pow(rssi,4);
+        /*
+        System.out.println("Exponent method in m");
+        double exp = Math.pow(base, exponent);
+        System.out.println(exp);
         
+        System.out.println("Veljko's method in m");
+        double vel = Math.round(( Math.pow(10,(-40.4-rssi)/20)*100))/100;
+        System.out.println(vel);
+        
+        System.out.println("Talking point's method in f");
         double distance = 730.24198315 + 52.33325511*rssi + 1.35152407*Math.pow(rssi, 2) 
                 + 0.01481265*Math.pow(rssi, 3) + 0.00005900*Math.pow(rssi, 4)+0.00541703*180;
+        System.out.println(distance);
+        */
         
-        
+        double distance = 730.24198315 + 52.33325511*rssi + 1.35152407*Math.pow(rssi, 2) 
+        + 0.01481265*Math.pow(rssi, 3) + 0.00005900*Math.pow(rssi, 4)+0.00541703*180;
         //return (distance>0)?distance:rssi;
+        //Small dataset fit
+        //double distance = 0.02704*Math.pow(rssi,2) + 3.069*rssi + 91.9;
+        //Big dataset fit
+        //double distance = 0.02931*Math.pow(rssi,2) + 2.677*rssi + 70.67;
         return distance;
 }
 
@@ -117,7 +133,7 @@ static double[] myRotation(double x, double y, double dist, double deg) {
        return myLocation;
 }
 
-static Location MyTrilateration(double Lat1, double Long1, double rssi1, 
+static LocationLevel MyTrilateration(double Lat1, double Long1, double rssi1, 
                       double Lat2, double Long2, double rssi2,
                       double Lat3, double Long3, double rssi3) {
        
@@ -137,6 +153,8 @@ static Location MyTrilateration(double Lat1, double Long1, double rssi1,
 //     dist2 = calDistToDeg(6);       //calDistToDeg(calcDistance(rssi2));
 //     dist3 = calDistToDeg(7);       //calDistToDeg(calcDistance(rssi3));
        
+       //TODO Mariya: Here I shouldn't be using calFeetToMeter 
+       //if I change the calcDistance formula to return meters
        dist1 = calDistToDeg(calFeetToMeter(calcDistance(rssi1)));
        dist2 = calDistToDeg(calFeetToMeter(calcDistance(rssi2)));
        dist3 = calDistToDeg(calFeetToMeter(calcDistance(rssi3)));
@@ -189,19 +207,28 @@ static Location MyTrilateration(double Lat1, double Long1, double rssi1,
        MyLocation[0] = MyLocation[0] + Lat1;
        MyLocation[1] = MyLocation[1] + Long1; 
        
-       Location loc = new Location(MyLocation[0], MyLocation[1]);
+       LocationLevel loc = new LocationLevel(MyLocation[1], MyLocation[0], 0);
        
        return loc;
 }
 /*Local main for debug purposes*/
-/*
+
 public static void main(String args[]) throws Exception{
+	//Three locations where GizmoDo is overheard
+	
   double Lat1 = 34.42202041666667, Long1 = -119.86214941666667, rssi1 = -88, 
   		Lat2 = 34.4222618, Long2 = -119.86248145, rssi2 = -99, 
   		Lat3 = 34.42218891666667, Long3 = -119.86256886666666, rssi3 = -79;
-  Location myLoc;
+  		
+  // Three locations for TRENDnet
+  /*
+  double Lat1 = 34.422098766666664, Long1 = -119.86208576666667, rssi1 = -93, 
+	Lat2 = 34.42240303333333, Long2 = -119.86261985, rssi2 = -87, 
+	Lat3 = 34.422437466666665, Long3 = -119.86287918333333, rssi3 = -87;
+  */
+  LocationLevel myLoc;
   myLoc = Trilateration.MyTrilateration(Lat1, Long1, rssi1, Lat2, Long2, rssi2, Lat3, Long3, rssi3);
-  System.out.println(myLoc);
-  
-}*/
+  System.out.println("Estimated: " + myLoc);
+  System.out.println("Real: longitude = -119.86251341666667 latitude = 34.4223179");
+}
 }

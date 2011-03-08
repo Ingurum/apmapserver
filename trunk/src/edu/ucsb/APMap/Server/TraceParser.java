@@ -22,7 +22,7 @@ public class TraceParser {
 			
 			String line;
 			String[] elems;
-			Location loc = null;
+			LocationLevel loc = null;
 			LocationLevel loclev = null;
 			APInfo ap ;
 			
@@ -31,7 +31,7 @@ public class TraceParser {
 					while (!(line = br.readLine()).equals("Ending_LOC")){
 						elems = line.split(",");
 						if (elems.length == 3){
-							loc = new Location(Double.parseDouble(elems[1]), Double.parseDouble(elems[0]));	
+							loc = new LocationLevel(Double.parseDouble(elems[1]), Double.parseDouble(elems[0]),0);	
 						}	
 					}
 				}
